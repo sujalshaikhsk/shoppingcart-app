@@ -74,14 +74,14 @@ public class CustomerController {
 	public ResponseEntity<Optional<ViewOrdersResponseDto>> viewMyOrders(@PathVariable Long customerId)
 			throws OrderNotFoundException, CustomerNotFoundException {
 		Optional<ViewOrdersResponseDto> viewOrdersResponseDto = orderService.viewMyOrders(customerId);
-		if (!viewOrdersResponseDto.isPresent()) {
-			viewOrdersResponseDto.get().setStatusCode(ApiConstant.FAILURE_CODE);
-			viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_NOT_FOUND);
-			return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.NOT_FOUND);
+		if (viewOrdersResponseDto.isPresent()) {
+			viewOrdersResponseDto.get().setStatusCode(ApiConstant.SUCCESS_CODE);
+			viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_FOUND);
+			return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.OK);
 		}
-		viewOrdersResponseDto.get().setStatusCode(ApiConstant.SUCCESS_CODE);
-		viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_FOUND);
-		return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.OK);
+		viewOrdersResponseDto.get().setStatusCode(ApiConstant.FAILURE_CODE);
+		viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_NOT_FOUND);
+		return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -95,14 +95,16 @@ public class CustomerController {
 		log.info("Entering into saveCustomerDetails method of shopping cart app CreditCardController");
 		CustomerResponseDto customerResponseDto = new CustomerResponseDto();
 		Optional<Customer> optionalCustomer = shoppingcartloginService.saveCustomerDetails(customer);
-		if (!optionalCustomer.isPresent()) {
+		if (optionalCustomer.isPresent()) {
 			BeanUtils.copyProperties(optionalCustomer.get(), customerResponseDto);
-			customerResponseDto.setMessage(ApiConstant.LOGIN_ERROR);
-			customerResponseDto.setStatusCode(HttpStatus.NOT_FOUND.value());
-		} else {
 			customerResponseDto.setMessage(ApiConstant.LOGIN_SUCCESS);
 			customerResponseDto.setStatusCode(HttpStatus.OK.value());
+			return new ResponseEntity<>(customerResponseDto, HttpStatus.OK);
+		} else {
+			customerResponseDto.setMessage(ApiConstant.LOGIN_ERROR);
+			customerResponseDto.setStatusCode(HttpStatus.NOT_FOUND.value());
+			return new ResponseEntity<>(customerResponseDto, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(customerResponseDto, HttpStatus.OK);
+		
 	}
 }
