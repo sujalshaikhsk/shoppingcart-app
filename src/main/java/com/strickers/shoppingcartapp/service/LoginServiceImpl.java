@@ -53,7 +53,12 @@ public class LoginServiceImpl implements LoginService {
 		loginResponsedto.setType(ApiConstant.SHOPPING_CART_TYPE);
 		return Optional.of(loginResponsedto);
 	}
-
+	
+	/**
+	 * 
+	 * @param customer
+	 * @return Optional<Customer> 
+	 */
 	@Override
 	public Optional<Customer> saveCustomerDetails(Customer customer) {
 		customer.setCreatedDate(LocalDate.now());
@@ -61,4 +66,6 @@ public class LoginServiceImpl implements LoginService {
 		Customer customer1= customerRepository.save(customer);
 		return Optional.ofNullable(customer1);
 	}
+	
+	
 }

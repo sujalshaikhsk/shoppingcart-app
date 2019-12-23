@@ -31,6 +31,12 @@ public class CustomerController {
 	@Autowired
 	LoginService shoppingcartloginService;
 
+	/**
+	 * 
+	 * @param loginRequestdto
+	 * @return Optional<LoginResponseDto>
+	 * @throws LoginException
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<Optional<LoginResponseDto>> creditCardLogin(@RequestBody LoginRequestDto loginRequestdto)
 			throws LoginException {
@@ -48,6 +54,12 @@ public class CustomerController {
 
 	}
 	
+	/**
+	 * 
+	 * @param customer
+	 * @return CustomerResponseDto
+	 * @throws LoginException
+	 */
 	@PostMapping()
 	public ResponseEntity<CustomerResponseDto> saveCustomerDetails(@RequestBody Customer customer)
 			throws LoginException {
@@ -63,6 +75,5 @@ public class CustomerController {
 			customerResponseDto.setStatusCode(HttpStatus.OK.value());
 		}
 		return new ResponseEntity<>(customerResponseDto, HttpStatus.OK);
-
 	}
 }
