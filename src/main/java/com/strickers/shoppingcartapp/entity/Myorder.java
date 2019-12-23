@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "product")
+@Table(name = "myorder")
 @Setter
 @Getter
 @SequenceGenerator(name = "ordersequence", initialValue = 100100)
@@ -28,6 +28,9 @@ public class Myorder implements Serializable {
 	private Integer orderId;
 	private Long creditcardNumber;
 
+	@OneToOne
+	@JoinColumn(name = "customerId")
+	private Customer customer;
 	@OneToOne
 	@JoinColumn(name = "productId")
 	private Product product;
