@@ -33,7 +33,11 @@ public class Myorder implements Serializable {
 	private Customer customer;
 	
 	@OneToOne
+<<<<<<< HEAD
 	@JoinColumn(name = "product_id")
+=======
+	@JoinColumn(name = "productId")
+>>>>>>> 8b9c81477361be4806cb83cae408bd3e0d3ff6cf
 	private Product product;
 
 	private String shippingAddress;
