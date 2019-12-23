@@ -9,5 +9,5 @@ import com.strickers.shoppingcartapp.entity.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-	Optional<Customer> findByMobileNumberAndPassword(Long mobileNumber, String password);
+	Optional<Customer> findByMobileNumber(Long mobileNumber);
 }
