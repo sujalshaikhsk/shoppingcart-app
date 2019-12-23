@@ -31,9 +31,9 @@ public class Myorder implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "customerId")
 	private Customer customer;
+	
 	@OneToOne
 	@JoinColumn(name = "productId")
-	@JoinColumn(name = "product_id")
 	private Product product;
 
 	private String shippingAddress;

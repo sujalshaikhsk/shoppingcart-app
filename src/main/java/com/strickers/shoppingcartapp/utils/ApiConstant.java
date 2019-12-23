@@ -30,12 +30,8 @@ public class ApiConstant {
 	public static final Integer NO_CONTENT_CODE = 204;
 	public static final String POLICY_FAILURE = "The customer is unable to buy policy";
 	public static final String POLICY_SUCCESS = "The policy is successfully availed";
-<<<<<<< HEAD
 	public static final String NOT_PERMITTED = "Your age is not permitted to avail the offer";
-=======
-	public static final String NOT_PERMITTED = "Your age is not permitted to avail the offer" ;
-	public static final String PRODUCTS_NOT_FOUND = "Products is not present";
+	public static final String PRODUCTS_NOT_FOUND = "Products are not present";
 
->>>>>>> 42e5c5906e96a8b49c1430a1e679b1d2ea0abd1f
 
 }

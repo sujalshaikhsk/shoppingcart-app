@@ -21,6 +21,7 @@ import com.strickers.shoppingcartapp.dto.LoginRequestDto;
 import com.strickers.shoppingcartapp.dto.LoginResponseDto;
 import com.strickers.shoppingcartapp.dto.ViewOrdersResponseDto;
 import com.strickers.shoppingcartapp.entity.Customer;
+import com.strickers.shoppingcartapp.exception.CustomerNotFoundException;
 import com.strickers.shoppingcartapp.exception.OrderNotFoundException;
 import com.strickers.shoppingcartapp.service.LoginService;
 import com.strickers.shoppingcartapp.service.OrderService;
@@ -57,18 +58,17 @@ public class CustomerController {
 	}
 
 	@GetMapping("/{customerId}/orders")
-	ResponseEntity<Optional<ViewOrdersResponseDto>> viewMyOrders(@PathVariable Long customerId)
-			throws OrderNotFoundException {
-		Optional<ViewOrdersResponseDto> favouriteBeneficiariesResponseDto = orderService.viewMyOrders(customerId);
-		if (favouriteBeneficiariesResponseDto.isPresent()) {
-			favouriteBeneficiariesResponseDto.get().setStatusCode(ApiConstant.FAILURE_CODE);
-			favouriteBeneficiariesResponseDto.get().setMessage(ApiConstant.ORDER_NOT_FOUND);
-			return new ResponseEntity<>(favouriteBeneficiariesResponseDto, HttpStatus.OK);
+	public ResponseEntity<Optional<ViewOrdersResponseDto>> viewMyOrders(@PathVariable Long customerId)
+			throws OrderNotFoundException, CustomerNotFoundException {
+		Optional<ViewOrdersResponseDto> viewOrdersResponseDto = orderService.viewMyOrders(customerId);
+		if (!viewOrdersResponseDto.isPresent()) {
+			viewOrdersResponseDto.get().setStatusCode(ApiConstant.FAILURE_CODE);
+			viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_NOT_FOUND);
+			return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.NOT_FOUND);
 		}
-		ViewOrdersResponseDto viewOrdersResponseDto = new ViewOrdersResponseDto();
-		viewOrdersResponseDto.setStatusCode(ApiConstant.SUCCESS_CODE);
-		viewOrdersResponseDto.setMessage(ApiConstant.ORDER_FOUND);
-		return new ResponseEntity<>(Optional.of(viewOrdersResponseDto), HttpStatus.OK);
+		viewOrdersResponseDto.get().setStatusCode(ApiConstant.SUCCESS_CODE);
+		viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_FOUND);
+		return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.OK);
 	}
 
 	@PostMapping()
