@@ -36,9 +36,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerController {
 	@Autowired
 	LoginService shoppingcartloginService;
+	
 	@Autowired
 	OrderService orderService;
 
+	/**
+	 * 
+	 * @param loginRequestdto
+	 * @return Optional<LoginResponseDto>
+	 * @throws LoginException
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<Optional<LoginResponseDto>> creditCardLogin(@RequestBody LoginRequestDto loginRequestdto)
 			throws LoginException {
@@ -56,7 +63,13 @@ public class CustomerController {
 		return new ResponseEntity<>(loginResponsedto, HttpStatus.OK);
 
 	}
-
+	
+	/**
+	 * 
+	 * @param customer
+	 * @return CustomerResponseDto
+	 * @throws LoginException
+	 */
 	@GetMapping("/{customerId}/orders")
 	public ResponseEntity<Optional<ViewOrdersResponseDto>> viewMyOrders(@PathVariable Long customerId)
 			throws OrderNotFoundException, CustomerNotFoundException {
@@ -86,6 +99,5 @@ public class CustomerController {
 			customerResponseDto.setStatusCode(HttpStatus.OK.value());
 		}
 		return new ResponseEntity<>(customerResponseDto, HttpStatus.OK);
-
 	}
 }
