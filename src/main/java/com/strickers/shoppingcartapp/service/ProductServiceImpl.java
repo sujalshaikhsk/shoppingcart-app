@@ -16,9 +16,11 @@ import org.springframework.web.client.RestTemplate;
 import com.strickers.shoppingcartapp.dto.BuyRequestDto;
 import com.strickers.shoppingcartapp.dto.BuyResponseDto;
 import com.strickers.shoppingcartapp.dto.TransactionRequestDto;
+import com.strickers.shoppingcartapp.entity.Customer;
 import com.strickers.shoppingcartapp.entity.Myorder;
 import com.strickers.shoppingcartapp.entity.Product;
 import com.strickers.shoppingcartapp.exception.ProductNotPresentException;
+import com.strickers.shoppingcartapp.repository.CustomerRepository;
 import com.strickers.shoppingcartapp.repository.MyOrderRepository;
 import com.strickers.shoppingcartapp.repository.ProductRepository;
 import com.strickers.shoppingcartapp.utils.ApiConstant;
@@ -39,6 +41,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	@Autowired
 	private MyOrderRepository myOrderRepository;
@@ -69,25 +74,30 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public BuyResponseDto buyProduct(BuyRequestDto buyRequestDto) {
+	public BuyResponseDto buyProduct(Long customerId, BuyRequestDto buyRequestDto) {
 		BuyResponseDto buyResponseDto = new BuyResponseDto();
 		TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
-		if (validateOtp(buyRequestDto)) {
-			log.info(" inside validate buy product");
-			Optional<Product> product = productRepository.findById(buyRequestDto.getProductId());
-			if (product.isPresent()) {
-				log.info(" Calling validate product");
+		Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
 
-				Myorder myorder = new Myorder();
-				myorder.setProduct(product.get());
-				myorder.setShippingAddress(buyRequestDto.getShippingAddress());
-				myorder.setCreditcardNumber(buyRequestDto.getCreditCardNumber());
-				myOrderRepository.save(myorder);
-				BeanUtils.copyProperties(buyRequestDto, transactionRequestDto);
-				transactionRequestDto.setAmount(product.get().getPrice());
-				if(saveTransaction(transactionRequestDto)){
-					BeanUtils.copyProperties(buyRequestDto, buyResponseDto);
-					return buyResponseDto;
+		if (optionalCustomer.isPresent()) {
+			if (validateOtp(buyRequestDto)) {
+				log.info(" inside validate buy product");
+				Optional<Product> product = productRepository.findById(buyRequestDto.getProductId());
+				if (product.isPresent()) {
+					log.info(" Calling validate product");
+
+					Myorder myorder = new Myorder();
+					myorder.setProduct(product.get());
+					myorder.setShippingAddress(buyRequestDto.getShippingAddress());
+					myorder.setCreditcardNumber(buyRequestDto.getCreditCardNumber());
+					myorder.setCustomer(optionalCustomer.get());
+					myOrderRepository.save(myorder);
+					BeanUtils.copyProperties(buyRequestDto, transactionRequestDto);
+					transactionRequestDto.setAmount(product.get().getPrice());
+					if (saveTransaction(transactionRequestDto)) {
+						BeanUtils.copyProperties(buyRequestDto, buyResponseDto);
+						return buyResponseDto;
+					}
 				}
 			}
 		}
@@ -103,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
 
 		Boolean response = restTemplate.exchange(url, HttpMethod.POST, entity, Boolean.class).getBody();
 
-		return response;		
+		return response;
 	}
 
 	private boolean validateOtp(BuyRequestDto buyRequestDto) {

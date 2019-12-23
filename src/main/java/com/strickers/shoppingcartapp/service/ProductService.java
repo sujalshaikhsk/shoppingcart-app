@@ -11,6 +11,6 @@ public interface ProductService {
 	
 	List<Product> searchProductByName(String productName) throws ProductNotPresentException;
 
-	BuyResponseDto buyProduct(BuyRequestDto buyRequestDto);
+	BuyResponseDto buyProduct(Long customerId, BuyRequestDto buyRequestDto);
 
 }
