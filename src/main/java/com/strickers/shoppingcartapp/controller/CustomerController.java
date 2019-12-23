@@ -84,6 +84,11 @@ public class CustomerController {
 		return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * @param customer
+	 * @return
+	 * @throws LoginException
+	 */
 	@PostMapping()
 	public ResponseEntity<CustomerResponseDto> saveCustomerDetails(@RequestBody Customer customer)
 			throws LoginException {

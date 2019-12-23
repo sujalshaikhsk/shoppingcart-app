@@ -29,11 +29,11 @@ public class Myorder implements Serializable {
 	private Long creditcardNumber;
 
 	@OneToOne
-	@JoinColumn(name = "customerId")
+	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
 	@OneToOne
-	@JoinColumn(name = "productId")
+	@JoinColumn(name = "product_id")
 	private Product product;
 
 	private String shippingAddress;
