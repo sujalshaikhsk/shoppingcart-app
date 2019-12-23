@@ -7,7 +7,7 @@ import com.strickers.shoppingcartapp.exception.ProductNotPresentException;
 
 public interface ProductService {
 	
-	
 	List<Product> searchProductByName(String productName) throws ProductNotPresentException;
+	
 
 }
