@@ -10,6 +10,12 @@ public class ApiConstant {
 
     public static final String SUCCESS = "SUCCESSFUL";
     public static final String FAILED = "FAILED";
+    
+    
+    public static final String LOGIN_ERROR = "please enter valid username and password";
+	public static final String LOGIN_SUCCESS = "you are successfully logged in";
+	public static final String SHOPPING_CART_TYPE = "shopping";
+    
 
     public static final String INTERNAL_SERVER_ERROR = "INTERNAL SERVER ERROR";
     public static final String VALIDATION_FAILED = "VALIDATION FAILED";
