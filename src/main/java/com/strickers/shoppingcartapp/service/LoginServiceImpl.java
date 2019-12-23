@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 		
 		LoginResponseDto loginResponsedto = new LoginResponseDto();
-		loginResponsedto.setCustomerID(customerResponse.get().getCustomerId());
+		loginResponsedto.setCustomerId(customerResponse.get().getCustomerId());
 		loginResponsedto.setCustomerName(customerResponse.get().getCustomerName());
 		loginResponsedto.setType(ApiConstant.SHOPPING_CART_TYPE);
 		return Optional.of(loginResponsedto);

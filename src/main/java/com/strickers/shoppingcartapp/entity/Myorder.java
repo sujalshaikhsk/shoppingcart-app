@@ -29,6 +29,10 @@ public class Myorder implements Serializable {
 	private Long creditcardNumber;
 
 	@OneToOne
+	@JoinColumn(name = "customerId")
+	private Customer customer;
+	@OneToOne
+	@JoinColumn(name = "productId")
 	@JoinColumn(name = "product_id")
 	private Product product;
 
