@@ -35,10 +35,10 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(allowedHeaders = { "*", "*/" }, origins = { "*", "*/" })
 public class CustomerController {
 	@Autowired
-	LoginService shoppingcartloginService;
+	private LoginService shoppingcartloginService;
 	
 	@Autowired
-	OrderService orderService;
+	private OrderService orderService;
 
 	/**
 	 * 
