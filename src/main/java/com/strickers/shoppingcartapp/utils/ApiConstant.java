@@ -10,6 +10,10 @@ public class ApiConstant {
 	}
 
 	public static final String SUCCESS = "SUCCESSFUL";
+	public static final String ORDER_SUCCESS = "Your order has been successfully placed";
+	public static final String IN_VALID_OTP = "Please enter valid OTP";
+
+
 	public static final String FAILED = "FAILED";
 
 	public static final String LOGIN_ERROR = "please enter valid username and password";

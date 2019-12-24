@@ -19,6 +19,8 @@ import com.strickers.shoppingcartapp.dto.TransactionRequestDto;
 import com.strickers.shoppingcartapp.entity.Customer;
 import com.strickers.shoppingcartapp.entity.Myorder;
 import com.strickers.shoppingcartapp.entity.Product;
+import com.strickers.shoppingcartapp.exception.CustomerNotFoundException;
+import com.strickers.shoppingcartapp.exception.InvalidOtpException;
 import com.strickers.shoppingcartapp.exception.ProductNotPresentException;
 import com.strickers.shoppingcartapp.repository.CustomerRepository;
 import com.strickers.shoppingcartapp.repository.MyOrderRepository;
@@ -73,8 +75,13 @@ public class ProductServiceImpl implements ProductService {
 		return products;
 	}
 
+	/**
+	 * @throws InvalidOtpException 
+	 * @throws CustomerNotFoundException 
+	 * 
+	 */
 	@Override
-	public BuyResponseDto buyProduct(Long customerId, BuyRequestDto buyRequestDto) {
+	public BuyResponseDto buyProduct(Long customerId, BuyRequestDto buyRequestDto) throws InvalidOtpException, CustomerNotFoundException {
 		BuyResponseDto buyResponseDto = new BuyResponseDto();
 		TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
 		Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
@@ -99,7 +106,11 @@ public class ProductServiceImpl implements ProductService {
 						return buyResponseDto;
 					}
 				}
+			}else {
+				throw new InvalidOtpException(ApiConstant.IN_VALID_OTP);
 			}
+		}else {
+			throw new CustomerNotFoundException(ApiConstant.CUSTOMER_NOT_FOUND);
 		}
 		return null;
 	}
@@ -109,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		HttpEntity<TransactionRequestDto> entity = new HttpEntity<>(transactionRequestDto, headers);
 
-		String url = "http://localhost:8085/creditcard/creditcards/transactions";
+		String url = "http://localhost:8085/creditcard/transactions";
 
 		Boolean response = restTemplate.exchange(url, HttpMethod.POST, entity, Boolean.class).getBody();
 
@@ -124,6 +135,8 @@ public class ProductServiceImpl implements ProductService {
 		String url = "http://localhost:8085/creditcard/creditcards/otp";
 
 		BuyRequestDto responseOtp = restTemplate.exchange(url, HttpMethod.POST, entity, BuyRequestDto.class).getBody();
+
+		log.info(" OTP matched "+responseOtp.getOtp());
 
 		if (responseOtp.getOtp().equals(buyRequestDto.getOtp())) {
 			log.info(" OTP matched ");

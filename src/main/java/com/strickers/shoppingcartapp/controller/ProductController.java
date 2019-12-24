@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.strickers.shoppingcartapp.dto.BuyRequestDto;
 import com.strickers.shoppingcartapp.dto.BuyResponseDto;
 import com.strickers.shoppingcartapp.entity.Product;
+import com.strickers.shoppingcartapp.exception.CustomerNotFoundException;
+import com.strickers.shoppingcartapp.exception.InvalidOtpException;
 import com.strickers.shoppingcartapp.exception.ProductNotPresentException;
 import com.strickers.shoppingcartapp.service.ProductService;
 import com.strickers.shoppingcartapp.utils.ApiConstant;
@@ -68,18 +70,23 @@ public class ProductController {
 	 * @param buyRequestDto
 	 * @return BuyResponseDto
 	 * @throws ProductNotPresentException
+	 * @throws InvalidOtpException 
 	 */
-	@PostMapping("/customer/{customerId}/buy")
+	@PostMapping("/customer/{customerId}")
 	public ResponseEntity<BuyResponseDto> buyProduct(@PathVariable("customerId") Long customerId , @RequestBody BuyRequestDto buyRequestDto)
-			throws ProductNotPresentException {
-		log.info("Entering into searchProductByName method of controller");
+			throws ProductNotPresentException, InvalidOtpException, CustomerNotFoundException {
+		log.info("Entering into buyProduct method of controller:: "+customerId+ " ::: "+buyRequestDto.getShippingAddress()+" :: "+buyRequestDto.getCreditCardNumber()+" :: "+buyRequestDto.getOtp()+" :: "+buyRequestDto.getProductId());
 		BuyResponseDto buyResponseDto = productService.buyProduct(customerId, buyRequestDto);
 		if(!Objects.isNull(buyResponseDto)) {
-			buyResponseDto.setMessage(ApiConstant.SUCCESS);
+			buyResponseDto.setMessage(ApiConstant.ORDER_SUCCESS);
 			buyResponseDto.setStatusCode(ApiConstant.SUCCESS_CODE);
 			return new ResponseEntity<>(buyResponseDto, HttpStatus.OK);
+		}else {
+			BuyResponseDto buyResponseDto1 = new BuyResponseDto();
+			buyResponseDto1.setMessage(ApiConstant.FAILED);
+			buyResponseDto1.setStatusCode(ApiConstant.FAILURE_CODE);
+			return new ResponseEntity<>(buyResponseDto1, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 }
