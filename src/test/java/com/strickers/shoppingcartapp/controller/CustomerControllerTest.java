@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.shoppingcartapp.dto.ViewOrdersResponseDto;
@@ -24,7 +25,7 @@ import com.strickers.shoppingcartapp.exception.OrderNotFoundException;
 import com.strickers.shoppingcartapp.service.LoginService;
 import com.strickers.shoppingcartapp.service.OrderService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CustomerControllerTest {
 
 	@InjectMocks
