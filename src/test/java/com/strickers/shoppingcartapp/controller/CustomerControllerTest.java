@@ -15,8 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.strickers.shoppingcartapp.dto.CustomerRequestDto;
+import com.strickers.shoppingcartapp.dto.LoginRequestDto;
+import com.strickers.shoppingcartapp.dto.LoginResponseDto;
 import com.strickers.shoppingcartapp.dto.ViewOrdersResponseDto;
 import com.strickers.shoppingcartapp.entity.Customer;
 import com.strickers.shoppingcartapp.entity.Myorder;
@@ -40,7 +42,10 @@ public class CustomerControllerTest {
 	ViewOrdersResponseDto viewOrdersResponseDto = null;
 	List<Myorder> orderList = null;
 	Myorder myorder = null;
+	CustomerRequestDto customerRequestDto = null;
 	Customer customer = null;
+	 LoginRequestDto loginRequestdto=null;
+	 LoginResponseDto loginResponsedto=null;
 
 	@Before
 	public void before() {
@@ -55,10 +60,20 @@ public class CustomerControllerTest {
 		viewOrdersResponseDto.setMessage("success");
 		viewOrdersResponseDto.setMyorders(orderList);
 
+		customerRequestDto = new CustomerRequestDto();
+
 		customer = new Customer();
 		customer.setAddress("hassan");
-		customer.setCustomerId(1L);
 		customer.setCustomerName("bindu");
+		customer.setCustomerId(1L);
+		
+		loginRequestdto=new LoginRequestDto();
+		loginRequestdto.setMobileNumber(678L);
+		loginRequestdto.setPassword("bindu");
+		
+		loginResponsedto=new LoginResponseDto();
+		loginResponsedto.setCustomerId(1L);
+		loginResponsedto.setCustomerName("bindu");
 
 	}
 
@@ -69,29 +84,35 @@ public class CustomerControllerTest {
 		assertEquals(200, response);
 	}
 
-	/*
-	 * @Test public void testViewMyOrdersForNegative() throws
-	 * OrderNotFoundException, CustomerNotFoundException {
-	 * Optional<ViewOrdersResponseDto> viewOrdersResponseDtoResponse =
-	 * Optional.ofNullable(null);
-	 * Mockito.when(orderService.viewMyOrders(1L)).thenReturn(
-	 * viewOrdersResponseDtoResponse); Integer response =
-	 * customerController.viewMyOrders(1L).getStatusCodeValue(); assertEquals(404,
-	 * response); }
-	 */
-
+	
 	@Test
 	public void testSaveCustomerDetails() throws LoginException {
-		Mockito.when(shoppingcartloginService.saveCustomerDetails(customer)).thenReturn(Optional.of(customer));
-		Integer response = customerController.saveCustomerDetails(customer).getStatusCodeValue();
+		Mockito.when(shoppingcartloginService.saveCustomerDetails(customerRequestDto))
+				.thenReturn(Optional.of(customer));
+		Integer response = customerController.saveCustomerDetails(customerRequestDto).getStatusCodeValue();
 		assertEquals(200, response);
 	}
 
 	@Test
 	public void testSaveCustomerDetailsForNegative() throws LoginException {
 		Optional<Customer> customerResponse = Optional.ofNullable(null);
-		Mockito.when(shoppingcartloginService.saveCustomerDetails(customer)).thenReturn(customerResponse);
-		Integer response = customerController.saveCustomerDetails(customer).getStatusCodeValue();
+		Mockito.when(shoppingcartloginService.saveCustomerDetails(customerRequestDto)).thenReturn(customerResponse);
+		Integer response = customerController.saveCustomerDetails(customerRequestDto).getStatusCodeValue();
+		assertEquals(404, response);
+	}
+	
+	@Test
+	public void testCreditCardLoginForPositive() throws LoginException {
+		Mockito.when(shoppingcartloginService.login(loginRequestdto)).thenReturn(Optional.of(loginResponsedto));
+		Integer response = customerController.creditCardLogin(loginRequestdto).getStatusCodeValue();
+		assertEquals(200, response);
+	}
+
+	@Test
+	public void testCreditCardLoginForNegative() throws LoginException {
+		Optional<LoginResponseDto> loginResponse = Optional.ofNullable(null);
+		Mockito.when(shoppingcartloginService.login(loginRequestdto)).thenReturn(loginResponse);
+		Integer response = customerController.creditCardLogin(loginRequestdto).getStatusCodeValue();
 		assertEquals(404, response);
 	}
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.strickers.shoppingcartapp.dto.CustomerRequestDto;
 import com.strickers.shoppingcartapp.dto.CustomerResponseDto;
 import com.strickers.shoppingcartapp.dto.LoginRequestDto;
 import com.strickers.shoppingcartapp.dto.LoginResponseDto;
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerController {
 	@Autowired
 	private LoginService shoppingcartloginService;
-	
+
 	@Autowired
 	private OrderService orderService;
 
@@ -63,7 +64,7 @@ public class CustomerController {
 		return new ResponseEntity<>(loginResponsedto, HttpStatus.OK);
 
 	}
-	
+
 	/**
 	 * 
 	 * @param customer
@@ -74,14 +75,16 @@ public class CustomerController {
 	public ResponseEntity<Optional<ViewOrdersResponseDto>> viewMyOrders(@PathVariable Long customerId)
 			throws OrderNotFoundException, CustomerNotFoundException {
 		Optional<ViewOrdersResponseDto> viewOrdersResponseDto = orderService.viewMyOrders(customerId);
-		if (viewOrdersResponseDto.isPresent()) {
-			viewOrdersResponseDto.get().setStatusCode(ApiConstant.SUCCESS_CODE);
-			viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_FOUND);
-			return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.OK);
+
+		if (!viewOrdersResponseDto.isPresent()) {
+			viewOrdersResponseDto.get().setStatusCode(ApiConstant.FAILURE_CODE);
+			viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_NOT_FOUND);
+			return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.NOT_FOUND);
 		}
-		viewOrdersResponseDto.get().setStatusCode(ApiConstant.FAILURE_CODE);
-		viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_NOT_FOUND);
-		return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.NOT_FOUND);
+
+		viewOrdersResponseDto.get().setStatusCode(ApiConstant.SUCCESS_CODE);
+		viewOrdersResponseDto.get().setMessage(ApiConstant.ORDER_FOUND);
+		return new ResponseEntity<>(viewOrdersResponseDto, HttpStatus.OK);
 	}
 
 	/**
@@ -90,11 +93,11 @@ public class CustomerController {
 	 * @throws LoginException
 	 */
 	@PostMapping()
-	public ResponseEntity<CustomerResponseDto> saveCustomerDetails(@RequestBody Customer customer)
+	public ResponseEntity<CustomerResponseDto> saveCustomerDetails(@RequestBody CustomerRequestDto customerRequestDto)
 			throws LoginException {
 		log.info("Entering into saveCustomerDetails method of shopping cart app CreditCardController");
 		CustomerResponseDto customerResponseDto = new CustomerResponseDto();
-		Optional<Customer> optionalCustomer = shoppingcartloginService.saveCustomerDetails(customer);
+		Optional<Customer> optionalCustomer = shoppingcartloginService.saveCustomerDetails(customerRequestDto);
 		if (optionalCustomer.isPresent()) {
 			BeanUtils.copyProperties(optionalCustomer.get(), customerResponseDto);
 			customerResponseDto.setMessage(ApiConstant.LOGIN_SUCCESS);
@@ -105,6 +108,6 @@ public class CustomerController {
 			customerResponseDto.setStatusCode(HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<>(customerResponseDto, HttpStatus.NOT_FOUND);
 		}
-		
+
 	}
 }

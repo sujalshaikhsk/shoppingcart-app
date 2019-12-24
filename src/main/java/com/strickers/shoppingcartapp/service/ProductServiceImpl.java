@@ -79,25 +79,23 @@ public class ProductServiceImpl implements ProductService {
 		TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
 		Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
 
-		if (optionalCustomer.isPresent()) {
-			if (validateOtp(buyRequestDto)) {
-				log.info(" inside validate buy product");
-				Optional<Product> product = productRepository.findById(buyRequestDto.getProductId());
-				if (product.isPresent()) {
-					log.info(" Calling validate product");
+		if (optionalCustomer.isPresent() && validateOtp(buyRequestDto)) {
+			log.info(" inside validate buy product");
+			Optional<Product> product = productRepository.findById(buyRequestDto.getProductId());
+			if (product.isPresent()) {
+				log.info(" Calling validate product");
 
-					Myorder myorder = new Myorder();
-					myorder.setProduct(product.get());
-					myorder.setShippingAddress(buyRequestDto.getShippingAddress());
-					myorder.setCreditcardNumber(buyRequestDto.getCreditCardNumber());
-					myorder.setCustomer(optionalCustomer.get());
-					myOrderRepository.save(myorder);
-					BeanUtils.copyProperties(buyRequestDto, transactionRequestDto);
-					transactionRequestDto.setAmount(product.get().getPrice());
-					if (saveTransaction(transactionRequestDto)) {
-						BeanUtils.copyProperties(buyRequestDto, buyResponseDto);
-						return buyResponseDto;
-					}
+				Myorder myorder = new Myorder();
+				myorder.setProduct(product.get());
+				myorder.setShippingAddress(buyRequestDto.getShippingAddress());
+				myorder.setCreditcardNumber(buyRequestDto.getCreditCardNumber());
+				myorder.setCustomer(optionalCustomer.get());
+				myOrderRepository.save(myorder);
+				BeanUtils.copyProperties(buyRequestDto, transactionRequestDto);
+				transactionRequestDto.setAmount(product.get().getPrice());
+				if (saveTransaction(transactionRequestDto)) {
+					BeanUtils.copyProperties(buyRequestDto, buyResponseDto);
+					return buyResponseDto;
 				}
 			}
 		}
@@ -111,9 +109,8 @@ public class ProductServiceImpl implements ProductService {
 
 		String url = "http://localhost:8085/creditcard/creditcards/transactions";
 
-		Boolean response = restTemplate.exchange(url, HttpMethod.POST, entity, Boolean.class).getBody();
+		return restTemplate.exchange(url, HttpMethod.POST, entity, Boolean.class).getBody();
 
-		return response;
 	}
 
 	private boolean validateOtp(BuyRequestDto buyRequestDto) {

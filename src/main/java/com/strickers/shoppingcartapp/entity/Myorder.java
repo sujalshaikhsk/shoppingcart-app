@@ -1,7 +1,5 @@
 package com.strickers.shoppingcartapp.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,9 +17,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @SequenceGenerator(name = "ordersequence", initialValue = 100100)
-public class Myorder implements Serializable {
+public class Myorder  {
 
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ordersequence")
