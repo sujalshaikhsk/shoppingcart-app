@@ -14,12 +14,12 @@ public class ApiConstant {
 	public static final String IN_VALID_OTP = "Please enter valid OTP";
 
 
-	public static final String FAILED = "FAILED";
+	public static final String FAILED = "Unable to process your order";
 
-	public static final String LOGIN_ERROR = "please enter valid username and password";
-	public static final String LOGIN_SUCCESS = "you are successfully logged in";
+	public static final String LOGIN_ERROR = "Please enter valid username and password";
+	public static final String LOGIN_SUCCESS = "You are successfully logged in";
 	public static final String SHOPPING_CART_TYPE = "shopping";
-	public static final String ORDER_NOT_FOUND = "no orders found";
+	public static final String ORDER_NOT_FOUND = "No orders found";
 	public static final String ORDER_FOUND = "list of orders";
 
 	public static final String INTERNAL_SERVER_ERROR = "INTERNAL SERVER ERROR";
