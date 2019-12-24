@@ -1,6 +1,5 @@
 package com.strickers.shoppingcartapp.entity;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -16,9 +15,7 @@ import lombok.Setter;
 @Table(name = "customer")
 @Setter
 @Getter
-public class Customer implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class Customer{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

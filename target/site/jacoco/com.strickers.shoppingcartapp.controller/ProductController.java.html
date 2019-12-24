@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">shoppingcart-app</a> &gt; <a href="index.source.html" class="el_package">com.strickers.shoppingcartapp.controller</a> &gt; <span class="el_source">ProductController.java</span></div><h1>ProductController.java</h1><pre class="source lang-java linenums">package com.strickers.shoppingcartapp.controller;
+
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.strickers.shoppingcartapp.dto.BuyRequestDto;
+import com.strickers.shoppingcartapp.dto.BuyResponseDto;
+import com.strickers.shoppingcartapp.entity.Product;
+import com.strickers.shoppingcartapp.exception.ProductNotPresentException;
+import com.strickers.shoppingcartapp.service.ProductService;
+import com.strickers.shoppingcartapp.utils.ApiConstant;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * The ProductController class implements the method to search the product by
+ * name.
+ *
+ * @author Bindushree
+ * @since 2019-12-23
+ */
+
+@RestController
+<span class="fc" id="L36">@Slf4j</span>
+@RequestMapping(&quot;/products&quot;)
+@CrossOrigin(allowedHeaders = { &quot;*&quot;, &quot;*/&quot; }, origins = { &quot;*&quot;, &quot;*/&quot; })
+<span class="fc" id="L39">public class ProductController {</span>
+
+	@Autowired
+	ProductService productService;
+
+	/**
+	 * This method is to search the product by name and obtaining the list of
+	 * products.
+	 * 
+	 * @author Bindushree
+	 * @param productName
+	 * @return List&lt;Product&gt; returns a list of products containing that partial
+	 *         name.
+	 * @throws ProductNotPresentException
+	 */
+	@GetMapping(&quot;&quot;)
+	public ResponseEntity&lt;List&lt;Product&gt;&gt; searchProductByName(@RequestParam String productName)
+			throws ProductNotPresentException {
+<span class="fc" id="L57">		log.info(&quot;Entering into searchProductByName method of controller&quot;);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">		if (productName == null) {</span>
+<span class="fc" id="L59">			return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+		} else {
+<span class="fc" id="L61">			List&lt;Product&gt; products = productService.searchProductByName(productName);</span>
+<span class="fc" id="L62">			return new ResponseEntity&lt;&gt;(products, HttpStatus.OK);</span>
+		}
+	}
+
+	/**
+	 * This api is used for buying the product using credit card details
+	 * @param buyRequestDto
+	 * @return BuyResponseDto
+	 * @throws ProductNotPresentException
+	 */
+	@PostMapping(&quot;/customer/{customerId}/buy&quot;)
+	public ResponseEntity&lt;BuyResponseDto&gt; buyProduct(@PathVariable(&quot;customerId&quot;) Long customerId , @RequestBody BuyRequestDto buyRequestDto)
+			throws ProductNotPresentException {
+<span class="fc" id="L75">		log.info(&quot;Entering into searchProductByName method of controller&quot;);</span>
+<span class="fc" id="L76">		BuyResponseDto buyResponseDto = productService.buyProduct(customerId, buyRequestDto);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">		if(!Objects.isNull(buyResponseDto)) {</span>
+<span class="fc" id="L78">			buyResponseDto.setMessage(ApiConstant.SUCCESS);</span>
+<span class="fc" id="L79">			buyResponseDto.setStatusCode(ApiConstant.SUCCESS_CODE);</span>
+<span class="fc" id="L80">			return new ResponseEntity&lt;&gt;(buyResponseDto, HttpStatus.OK);</span>
+		}
+<span class="fc" id="L82">		return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

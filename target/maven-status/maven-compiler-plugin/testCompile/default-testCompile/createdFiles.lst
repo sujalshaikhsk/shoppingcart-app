@@ -1,0 +1,5 @@
+com\strickers\shoppingcartapp\controller\CustomerControllerTest.class
+com\strickers\shoppingcartapp\controller\ProductControllerTest.class
+com\strickers\shoppingcartapp\service\OrderServiceTest.class
+com\strickers\shoppingcartapp\service\ProductServiceTest.class
+com\strickers\shoppingcartapp\ShoppingcartAppApplicationTests.class

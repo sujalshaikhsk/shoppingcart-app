@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import javax.security.auth.login.LoginException;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.strickers.shoppingcartapp.dto.CustomerRequestDto;
 import com.strickers.shoppingcartapp.dto.LoginRequestDto;
 import com.strickers.shoppingcartapp.dto.LoginResponseDto;
 import com.strickers.shoppingcartapp.entity.Customer;
@@ -60,10 +62,12 @@ public class LoginServiceImpl implements LoginService {
 	 * @return Optional<Customer> 
 	 */
 	@Override
-	public Optional<Customer> saveCustomerDetails(Customer customer) {
-		customer.setCreatedDate(LocalDate.now());
-		customer.setStatus(StringConstant.ACTIVE_STATUS);
-		Customer customer1= customerRepository.save(customer);
+	public Optional<Customer> saveCustomerDetails(CustomerRequestDto customerRequestDto) {
+		customerRequestDto.setCreatedDate(LocalDate.now());
+		customerRequestDto.setStatus(StringConstant.ACTIVE_STATUS);
+		Customer customer1=new Customer();
+		BeanUtils.copyProperties(customerRequestDto, customer1);
+		 customerRepository.save(customer1);
 		return Optional.ofNullable(customer1);
 	}
 	

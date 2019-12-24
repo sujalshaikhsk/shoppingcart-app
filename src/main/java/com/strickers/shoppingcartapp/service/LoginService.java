@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.security.auth.login.LoginException;
 
+import com.strickers.shoppingcartapp.dto.CustomerRequestDto;
 import com.strickers.shoppingcartapp.dto.LoginRequestDto;
 import com.strickers.shoppingcartapp.dto.LoginResponseDto;
 import com.strickers.shoppingcartapp.entity.Customer;
@@ -11,6 +12,6 @@ import com.strickers.shoppingcartapp.entity.Customer;
 public interface LoginService {
 	public Optional<LoginResponseDto> login(LoginRequestDto loginRequestdto) throws LoginException;
 
-	public Optional<Customer> saveCustomerDetails(Customer customer);
+	public Optional<Customer> saveCustomerDetails(CustomerRequestDto customerRequestDto);
 
 }
